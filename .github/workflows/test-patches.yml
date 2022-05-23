@@ -1,0 +1,20 @@
+name: Test patches
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          repository: sourcegraph/sourcegraph
+          path: sourcegraph
+      - name: Apply patches
+        run: |
+          cd $GITHUB_WORKSPACE/sourcegraph
+          git apply ../patches/auth.patch
