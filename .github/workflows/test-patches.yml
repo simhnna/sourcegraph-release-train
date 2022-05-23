@@ -16,5 +16,8 @@ jobs:
           path: sourcegraph
       - name: Apply patches
         run: |
+          tag="$(cat .latest_version)"
           cd $GITHUB_WORKSPACE/sourcegraph
+          git fetch origin refs/tags/v$tag:refs/tags/v$tag
+          git checkout "tags/v$tag"
           git apply ../patches/auth.patch
