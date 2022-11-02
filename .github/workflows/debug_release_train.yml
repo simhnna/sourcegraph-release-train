@@ -22,7 +22,7 @@ jobs:
         with:
           repository: sourcegraph/sourcegraph
           path: sourcegraph
-          ref: v3.35.1
+          ref: v4.1.2
       - uses: actions/setup-node@v2
         with:
           node-version: '^v16.7.0'
@@ -32,12 +32,15 @@ jobs:
       - name: Apply patches
         run: |
           cd $GITHUB_WORKSPACE/sourcegraph
-          git apply ../patches/auth.patch
+          git apply ../patches/*
       - name: build server
         env:
-          VERSION: v3.35.1
-          IMAGE: sourcegraph-server-oss
+          VERSION: dev
+          IMAGE: simhnna/sourcegraph
         run: |
+          docker login --username "$docker_username" --password "$docker_password"
           cd $GITHUB_WORKSPACE/sourcegraph/cmd/server
           ./pre-build.sh
           ./build.sh
+          docker tag "${IMAGE}:latest" "${IMAGE}:${VERSION}"
+          docker push ${IMAGE}:${VERSION}

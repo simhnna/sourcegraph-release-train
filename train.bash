@@ -31,7 +31,7 @@ git checkout "tags/v$tag" -b "$tag-release-branch-simhnna"
 if [ 'Linux' == "$(uname -s)" ]; then
   sudo apt-get install musl-tools
 fi
-git apply ../patches/auth.patch
+git apply ../patches/*
 
 cd cmd/server
 ./pre-build.sh

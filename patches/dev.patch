@@ -1,0 +1,542 @@
+diff --git a/client/shared/src/codeintel/legacy-extensions/lsif/definition-hover.ts b/client/shared/src/codeintel/legacy-extensions/lsif/definition-hover.ts
+index b21893c5ae..a4c55a8668 100644
+--- a/client/shared/src/codeintel/legacy-extensions/lsif/definition-hover.ts
++++ b/client/shared/src/codeintel/legacy-extensions/lsif/definition-hover.ts
+@@ -29,52 +29,11 @@ const definitionAndHoverQuery = gql`
+         $repository: String!
+         $commit: String!
+         $path: String!
+-        $line: Int!
+-        $character: Int!
+     ) {
+         repository(name: $repository) {
+             commit(rev: $commit) {
+                 blob(path: $path) {
+-                    lsif {
+-                        definitions(line: $line, character: $character) {
+-                            nodes {
+-                                resource {
+-                                    path
+-                                    repository {
+-                                        name
+-                                    }
+-                                    commit {
+-                                        oid
+-                                    }
+-                                }
+-                                range {
+-                                    start {
+-                                        line
+-                                        character
+-                                    }
+-                                    end {
+-                                        line
+-                                        character
+-                                    }
+-                                }
+-                            }
+-                        }
+-                        hover(line: $line, character: $character) {
+-                            markdown {
+-                                text
+-                            }
+-                            range {
+-                                start {
+-                                    line
+-                                    character
+-                                }
+-                                end {
+-                                    line
+-                                    character
+-                                }
+-                            }
+-                        }
+-                    }
++                    name
+                 }
+             }
+         }
+diff --git a/client/shared/src/codeintel/legacy-extensions/lsif/implementations.ts b/client/shared/src/codeintel/legacy-extensions/lsif/implementations.ts
+index 102c5b81bb..74ef782b4d 100644
+--- a/client/shared/src/codeintel/legacy-extensions/lsif/implementations.ts
++++ b/client/shared/src/codeintel/legacy-extensions/lsif/implementations.ts
+@@ -27,41 +27,11 @@ const implementationsQuery = gql`
+         $repository: String!
+         $commit: String!
+         $path: String!
+-        $line: Int!
+-        $character: Int!
+-        $after: String
+     ) {
+         repository(name: $repository) {
+             commit(rev: $commit) {
+                 blob(path: $path) {
+-                    lsif {
+-                        implementations(line: $line, character: $character, after: $after) {
+-                            nodes {
+-                                resource {
+-                                    path
+-                                    repository {
+-                                        name
+-                                    }
+-                                    commit {
+-                                        oid
+-                                    }
+-                                }
+-                                range {
+-                                    start {
+-                                        line
+-                                        character
+-                                    }
+-                                    end {
+-                                        line
+-                                        character
+-                                    }
+-                                }
+-                            }
+-                            pageInfo {
+-                                endCursor
+-                            }
+-                        }
+-                    }
++                    name
+                 }
+             }
+         }
+diff --git a/client/shared/src/codeintel/legacy-extensions/lsif/ranges.ts b/client/shared/src/codeintel/legacy-extensions/lsif/ranges.ts
+index 9624b67b32..e06575e751 100644
+--- a/client/shared/src/codeintel/legacy-extensions/lsif/ranges.ts
++++ b/client/shared/src/codeintel/legacy-extensions/lsif/ranges.ts
+@@ -260,76 +260,11 @@ const rangesQuery = (hasImplementationsField: boolean): string => {
+     }
+ 
+     return gql`
+-    query LegacyRanges($repository: String!, $commit: String!, $path: String!, $startLine: Int!, $endLine: Int!) {
++    query LegacyRanges($repository: String!, $commit: String!, $path: String!) {
+         repository(name: $repository) {
+             commit(rev: $commit) {
+                 blob(path: $path) {
+-                    lsif {
+-                        ranges(startLine: $startLine, endLine: $endLine) {
+-                            nodes {
+-                                range {
+-                                    start {
+-                                        line
+-                                        character
+-                                    }
+-                                    end {
+-                                        line
+-                                        character
+-                                    }
+-                                }
+-                                definitions {
+-                                    nodes {
+-                                        resource {
+-                                            path
+-                                        }
+-                                        range {
+-                                            start {
+-                                                line
+-                                                character
+-                                            }
+-                                            end {
+-                                                line
+-                                                character
+-                                            }
+-                                        }
+-                                    }
+-                                }
+-                                references {
+-                                    nodes {
+-                                        resource {
+-                                            path
+-                                        }
+-                                        range {
+-                                            start {
+-                                                line
+-                                                character
+-                                            }
+-                                            end {
+-                                                line
+-                                                character
+-                                            }
+-                                        }
+-                                    }
+-                                }
+-                                ${implementationsFragment}
+-                                hover {
+-                                    markdown {
+-                                        text
+-                                    }
+-                                    range {
+-                                        start {
+-                                            line
+-                                            character
+-                                        }
+-                                        end {
+-                                            line
+-                                            character
+-                                        }
+-                                    }
+-                                }
+-                            }
+-                        }
+-                    }
++                    name
+                 }
+             }
+         }
+diff --git a/client/shared/src/codeintel/legacy-extensions/lsif/references.ts b/client/shared/src/codeintel/legacy-extensions/lsif/references.ts
+index 90ca20e357..01b45c6596 100644
+--- a/client/shared/src/codeintel/legacy-extensions/lsif/references.ts
++++ b/client/shared/src/codeintel/legacy-extensions/lsif/references.ts
+@@ -27,41 +27,11 @@ const referencesQuery = gql`
+         $repository: String!
+         $commit: String!
+         $path: String!
+-        $line: Int!
+-        $character: Int!
+-        $after: String
+     ) {
+         repository(name: $repository) {
+             commit(rev: $commit) {
+                 blob(path: $path) {
+-                    lsif {
+-                        references(line: $line, character: $character, after: $after) {
+-                            nodes {
+-                                resource {
+-                                    path
+-                                    repository {
+-                                        name
+-                                    }
+-                                    commit {
+-                                        oid
+-                                    }
+-                                }
+-                                range {
+-                                    start {
+-                                        line
+-                                        character
+-                                    }
+-                                    end {
+-                                        line
+-                                        character
+-                                    }
+-                                }
+-                            }
+-                            pageInfo {
+-                                endCursor
+-                            }
+-                        }
+-                    }
++                    name
+                 }
+             }
+         }
+diff --git a/client/shared/src/codeintel/legacy-extensions/lsif/stencil.ts b/client/shared/src/codeintel/legacy-extensions/lsif/stencil.ts
+index 39e30b083a..81ab8f5772 100644
+--- a/client/shared/src/codeintel/legacy-extensions/lsif/stencil.ts
++++ b/client/shared/src/codeintel/legacy-extensions/lsif/stencil.ts
+@@ -24,18 +24,7 @@ const stencilQuery = gql`
+         repository(name: $repository) {
+             commit(rev: $commit) {
+                 blob(path: $path) {
+-                    lsif {
+-                        stencil {
+-                            start {
+-                                line
+-                                character
+-                            }
+-                            end {
+-                                line
+-                                character
+-                            }
+-                        }
+-                    }
++                    name
+                 }
+             }
+         }
+diff --git a/client/web/src/codeintel/ReferencesPanelQueries.ts b/client/web/src/codeintel/ReferencesPanelQueries.ts
+index c93eee921a..c13d98dce2 100644
+--- a/client/web/src/codeintel/ReferencesPanelQueries.ts
++++ b/client/web/src/codeintel/ReferencesPanelQueries.ts
+@@ -44,52 +44,17 @@ const codeIntelFragments = gql`
+ `
+ 
+ export const USE_PRECISE_CODE_INTEL_FOR_POSITION_QUERY = gql`
+-    ${codeIntelFragments}
+-
+-    fragment PreciseCodeIntelForLocationFields on GitBlobLSIFData {
+-        references(
+-            line: $line
+-            character: $character
+-            first: $firstReferences
+-            after: $afterReferences
+-            filter: $filter
+-        ) {
+-            ...LocationConnectionFields
+-        }
+-        implementations(
+-            line: $line
+-            character: $character
+-            first: $firstImplementations
+-            after: $afterImplementations
+-            filter: $filter
+-        ) {
+-            ...LocationConnectionFields
+-        }
+-        definitions(line: $line, character: $character, filter: $filter) {
+-            ...LocationConnectionFields
+-        }
+-    }
+-
+     query UsePreciseCodeIntelForPosition(
+         $repository: String!
+         $commit: String!
+         $path: String!
+-        $line: Int!
+-        $character: Int!
+-        $afterReferences: String
+-        $firstReferences: Int
+-        $afterImplementations: String
+-        $firstImplementations: Int
+-        $filter: String
+     ) {
+         repository(name: $repository) {
+             id
+             commit(rev: $commit) {
+                 id
+                 blob(path: $path) {
+-                    lsif {
+-                        ...PreciseCodeIntelForLocationFields
+-                    }
++                    name
+                 }
+             }
+         }
+@@ -97,34 +62,17 @@ export const USE_PRECISE_CODE_INTEL_FOR_POSITION_QUERY = gql`
+ `
+ 
+ export const LOAD_ADDITIONAL_REFERENCES_QUERY = gql`
+-    ${codeIntelFragments}
+-
+     query LoadAdditionalReferences(
+         $repository: String!
+         $commit: String!
+         $path: String!
+-        $line: Int!
+-        $character: Int!
+-        $afterReferences: String
+-        $firstReferences: Int
+-        $filter: String
+     ) {
+         repository(name: $repository) {
+             id
+             commit(rev: $commit) {
+                 id
+                 blob(path: $path) {
+-                    lsif {
+-                        references(
+-                            line: $line
+-                            character: $character
+-                            first: $firstReferences
+-                            after: $afterReferences
+-                            filter: $filter
+-                        ) {
+-                            ...LocationConnectionFields
+-                        }
+-                    }
++                    name
+                 }
+             }
+         }
+@@ -138,28 +86,13 @@ export const LOAD_ADDITIONAL_IMPLEMENTATIONS_QUERY = gql`
+         $repository: String!
+         $commit: String!
+         $path: String!
+-        $line: Int!
+-        $character: Int!
+-        $afterImplementations: String
+-        $firstImplementations: Int
+-        $filter: String
+     ) {
+         repository(name: $repository) {
+             id
+             commit(rev: $commit) {
+                 id
+                 blob(path: $path) {
+-                    lsif {
+-                        implementations(
+-                            line: $line
+-                            character: $character
+-                            first: $firstImplementations
+-                            after: $afterImplementations
+-                            filter: $filter
+-                        ) {
+-                            ...LocationConnectionFields
+-                        }
+-                    }
++                    name
+                 }
+             }
+         }
+diff --git a/client/web/src/enterprise/codeintel/badge/hooks/queries.ts b/client/web/src/enterprise/codeintel/badge/hooks/queries.ts
+index 7f3f6ce2b2..59ac3a6659 100644
+--- a/client/web/src/enterprise/codeintel/badge/hooks/queries.ts
++++ b/client/web/src/enterprise/codeintel/badge/hooks/queries.ts
+@@ -6,105 +6,15 @@ import { lsifUploadFieldsFragment } from '../../uploads/hooks/types'
+ export const codeIntelStatusQuery = gql`
+     query CodeIntelStatus($repository: String!, $commit: String!, $path: String!) {
+         repository(name: $repository) {
+-            codeIntelSummary {
+-                lastIndexScan
+-                lastUploadRetentionScan
+-                recentUploads {
+-                    ...LSIFUploadsWithRepositoryNamespaceFields
+-                }
+-                recentIndexes {
+-                    ...LSIFIndexesWithRepositoryNamespaceFields
+-                }
+-            }
++            
+             commit(rev: $commit) {
+                 path(path: $path) {
+-                    ... on GitBlob {
+-                        codeIntelSupport {
+-                            ...CodeIntelSupportFields
+-                        }
+-                        lsif {
+-                            lsifUploads {
+-                                ...LsifUploadFields
+-                            }
+-                        }
+-                    }
+-                    ... on GitTree {
+-                        codeIntelInfo {
+-                            ...GitTreeCodeIntelInfoFields
+-                        }
+-                        lsif {
+-                            lsifUploads {
+-                                ...LsifUploadFields
+-                            }
+-                        }
+-                    }
++                    __typename
+                 }
+             }
+         }
+     }
+ 
+-    fragment CodeIntelSupportFields on CodeIntelSupport {
+-        preciseSupport {
+-            ...PreciseSupportFields
+-        }
+-        searchBasedSupport {
+-            ...SearchBasedCodeIntelSupportFields
+-        }
+-    }
+-
+-    fragment GitTreeCodeIntelInfoFields on GitTreeCodeIntelInfo {
+-        preciseSupport {
+-            support {
+-                ...PreciseSupportFields
+-            }
+-            confidence
+-        }
+-        searchBasedSupport {
+-            support {
+-                ...SearchBasedCodeIntelSupportFields
+-            }
+-        }
+-    }
+-
+-    fragment PreciseSupportFields on PreciseCodeIntelSupport {
+-        supportLevel
+-        indexers {
+-            ...CodeIntelIndexerFields
+-        }
+-    }
+-
+-    fragment SearchBasedCodeIntelSupportFields on SearchBasedCodeIntelSupport {
+-        language
+-        supportLevel
+-    }
+-
+-    fragment CodeIntelIndexerFields on CodeIntelIndexer {
+-        name
+-        url
+-    }
+-
+-    fragment LSIFUploadsWithRepositoryNamespaceFields on LSIFUploadsWithRepositoryNamespace {
+-        root
+-        indexer {
+-            ...CodeIntelIndexerFields
+-        }
+-        uploads {
+-            ...LsifUploadFields
+-        }
+-    }
+-
+-    fragment LSIFIndexesWithRepositoryNamespaceFields on LSIFIndexesWithRepositoryNamespace {
+-        root
+-        indexer {
+-            ...CodeIntelIndexerFields
+-        }
+-        indexes {
+-            ...LsifIndexFields
+-        }
+-    }
+-
+-    ${lsifUploadFieldsFragment}
+-    ${lsifIndexFieldsFragment}
+ `
+ 
+ export const requestedLanguageSupportQuery = gql`
+diff --git a/client/web/src/repo/blob/backend.ts b/client/web/src/repo/blob/backend.ts
+index fa756b4349..b58182f80b 100644
+--- a/client/web/src/repo/blob/backend.ts
++++ b/client/web/src/repo/blob/backend.ts
+@@ -144,11 +144,7 @@ export const fetchStencil = memoizeObservable((options: FetchStencilOptions): Ob
+                 repository(name: $repoName) {
+                     commit(rev: $revision) {
+                         blob(path: $filePath) {
+-                            lsif {
+-                                stencil {
+-                                    ...BlobStencilFields
+-                                }
+-                            }
++                            name
+                         }
+                     }
+                 }
+diff --git a/dev/codeintel-qa/cmd/query/query.go b/dev/codeintel-qa/cmd/query/query.go
+index 4b7745c171..4b2e558f8f 100644
+--- a/dev/codeintel-qa/cmd/query/query.go
++++ b/dev/codeintel-qa/cmd/query/query.go
+@@ -60,11 +60,7 @@ const definitionsQuery = `
+ 		repository(name: $repository) {
+ 			commit(rev: $commit) {
+ 				blob(path: $path) {
+-					lsif {
+-						definitions(line: $line, character: $character) {
+-							` + locationsFragment + `
+-						}
+-					}
++					name
+ 				}
+ 			}
+ 		}
+@@ -132,11 +128,7 @@ const referencesQuery = `
+ 		repository(name: $repository) {
+ 			commit(rev: $commit) {
+ 				blob(path: $path) {
+-					lsif {
+-						references(line: $line, character: $character, after: $after) {
+-							` + locationsFragment + `
+-						}
+-					}
++					name
+ 				}
+ 			}
+ 		}
