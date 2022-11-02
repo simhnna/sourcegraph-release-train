@@ -67,7 +67,7 @@ index 0000000000..de9c853683
 +	}
 +}
 diff --git a/cmd/frontend/main.go b/cmd/frontend/main.go
-index bc1f6a64c3..52af157f3d 100644
+index e672de105a..2fa98445f6 100644
 --- a/cmd/frontend/main.go
 +++ b/cmd/frontend/main.go
 @@ -1,6 +1,7 @@
@@ -78,12 +78,10 @@ index bc1f6a64c3..52af157f3d 100644
  	"github.com/sourcegraph/sourcegraph/cmd/frontend/enterprise"
  	"github.com/sourcegraph/sourcegraph/cmd/frontend/shared"
  	"github.com/sourcegraph/sourcegraph/internal/authz"
-@@ -17,7 +18,8 @@ func main() {
- 	// See https://github.com/sourcegraph/sourcegraph/issues/3847 for details.
+@@ -17,6 +18,7 @@ func main() {
  	authz.SetProviders(true, []authz.Provider{})
  
--	shared.Main(func(_ database.DB, _ codeintel.Services, _ conftypes.UnifiedWatchable) enterprise.Services {
-+	shared.Main(func(db database.DB, _ codeintel.Services, _ conftypes.UnifiedWatchable) enterprise.Services {
+ 	shared.Main(func(db database.DB, c conftypes.UnifiedWatchable) enterprise.Services {
 +		httpauth.Init(db)
  		return enterprise.DefaultServices()
  	})
