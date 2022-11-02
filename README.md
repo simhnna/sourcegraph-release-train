@@ -1,40 +1,13 @@
 # sourcegraph-oss-release-train
 
-[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/jensim/sourcegraph-server-oss?sort=semver)][docker_hub]
-[![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/jensim/sourcegraph-server-oss?sort=semver)][docker_hub]
-[![Release train](https://github.com/jensim/sourcegraph-release-train/actions/workflows/release_train.yml/badge.svg)][gh_actions]
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/simhnna/sourcegraph?sort=semver)][docker_hub]
+[![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/simhnna/sourcegraph?sort=semver)][docker_hub]
+[![Release train](https://github.com/simhnna/sourcegraph-release-train/actions/workflows/release_train.yml/badge.svg)][gh_actions]
 [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/sourcegraph/server?color=orange&label=sourcegraph%20enterprise%20version&logo=sourcegraph&sort=semver)][docker_sg]
 
-This repo just creates a build pipeline on top of [sourcegraph](https://github.com/sourcegraph/sourcegraph)-OSS.
-The [enterprise version](https://hub.docker.com/r/sourcegraph/server) is great, but I cannot afford it beyond the trial, and since I like automating things,  
-I thought I'd automate the release pipeline for the OSS docker image.
 
-## Simple run conf
-```shell
-docker run -d \
-  --publish 7080:7080 \
-  --publish 127.0.0.1:3370:3370 \
-  --rm \
-  --volume ~/.sourcegraph/config:/etc/sourcegraph \
-  --volume ~/.sourcegraph/data:/var/opt/sourcegraph \
-  jensim/sourcegraph-server-oss:latest
-```
+This repo builds an open source version of sourcegraph that authenticates users based on http-headers set by a reverse proxy
 
-## docker-compose.yml
-```yaml
-version: '3.3'
-
-services:
-  source-graph:
-    image: jensim/sourcegraph-server-oss:latest
-    ports:
-      - "7080:7080"
-    volumes:
-      - .sourcegraph/config:/etc/sourcegraph
-      - .sourcegraph/data:/var/opt/sourcegraph
-      - .sourcegraph/site-conf:/root
-```
-
-[docker_hub]: https://hub.docker.com/r/jensim/sourcegraph-server-oss/tags?page=1&ordering=last_updated
-[gh_actions]: https://github.com/jensim/sourcegraph-release-train/actions/workflows/release_train.yml
+[docker_hub]: https://hub.docker.com/r/simhnna/sourcegraph/tags?page=1&ordering=last_updated
+[gh_actions]: https://github.com/simhnna/sourcegraph-release-train/actions/workflows/release_train.yml
 [docker_sg]: https://hub.docker.com/r/sourcegraph/server
