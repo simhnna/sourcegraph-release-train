@@ -37,9 +37,9 @@ cd cmd/server
 ./pre-build.sh
 ./build.sh
 
-docker tag "${IMAGE}:latest" "${IMAGE}:dev"
+docker tag "${IMAGE}:latest" "${IMAGE}:${PUSH_VERSION:-$tag}"
 
-docker push "${IMAGE}:dev"
+docker push "${IMAGE}:${PUSH_VERSION:-$tag}"
 
 echo '===========
 =  Done!  =

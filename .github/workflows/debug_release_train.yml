@@ -1,13 +1,6 @@
 name: DebugRelease train
 
 on:
-  # push:
-  #   paths:
-  #     - .github/workflows/debug_release_train.yml
-  #   branches:
-  #     - main
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -16,31 +9,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: installs
-        run: sudo apt-get install musl-tools
       - uses: actions/checkout@v2
         with:
           repository: sourcegraph/sourcegraph
           path: sourcegraph
-          ref: v4.1.2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '^v16.7.0'
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
           go-version: '^1.16.2'
-      - name: Apply patches
-        run: |
-          cd $GITHUB_WORKSPACE/sourcegraph
-          git apply ../patches/*
       - name: build server
         env:
-          VERSION: dev
-          IMAGE: simhnna/sourcegraph
+          PUSH_VERSION: dev
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker login --username "$docker_username" --password "$docker_password"
-          cd $GITHUB_WORKSPACE/sourcegraph/cmd/server
-          ./pre-build.sh
-          ./build.sh
-          docker tag "${IMAGE}:latest" "${IMAGE}:${VERSION}"
-          docker push ${IMAGE}:${VERSION}
+          cd "$(git rev-parse --show-toplevel)"
+          bash train.bash
