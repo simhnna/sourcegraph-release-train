@@ -1,0 +1,13 @@
+diff --git a/client/web/src/search/results/StreamingSearchResults.tsx b/client/web/src/search/results/StreamingSearchResults.tsx
+index 9c0cba0d99..b55ec27550 100644
+--- a/client/web/src/search/results/StreamingSearchResults.tsx
++++ b/client/web/src/search/results/StreamingSearchResults.tsx
+@@ -308,7 +308,7 @@ export const StreamingSearchResults: FC<StreamingSearchResultsProps> = props =>
+                 submittedURLQuery={submittedURLQuery}
+                 patternType={patternType}
+                 filters={results?.filters}
+-                showAggregationPanel={showAggregationPanel}
++                showAggregationPanel={false}
+                 selectedSearchContextSpec={props.selectedSearchContextSpec}
+                 aggregationUIMode={aggregationUIMode}
+                 settingsCascade={props.settingsCascade}
