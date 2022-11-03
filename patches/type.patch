@@ -1,5 +1,5 @@
 diff --git a/client/shared/src/codeintel/legacy-extensions/util/api.ts b/client/shared/src/codeintel/legacy-extensions/util/api.ts
-index 6242dd83b3..e2256a8163 100644
+index 6242dd83b3..7ddba9240a 100644
 --- a/client/shared/src/codeintel/legacy-extensions/util/api.ts
 +++ b/client/shared/src/codeintel/legacy-extensions/util/api.ts
 @@ -129,10 +129,10 @@ export class API {
@@ -67,7 +67,7 @@ index 6242dd83b3..e2256a8163 100644
              field => field.name === 'range'
          )
      })
-@@ -561,7 +561,7 @@ export class API {
+@@ -561,10 +561,10 @@ export class API {
          `
  
          interface IntrospectionResponse {
@@ -75,4 +75,8 @@ index 6242dd83b3..e2256a8163 100644
 +            __type?: { fields: { name: string }[] }
          }
  
-         return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type.fields.some(
+-        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type.fields.some(
++        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type?.fields.some(
+             field => field.name === 'stencil'
+         )
+     }
