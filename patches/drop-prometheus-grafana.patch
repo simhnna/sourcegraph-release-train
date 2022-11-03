@@ -1,0 +1,69 @@
+diff --git a/cmd/server/Dockerfile b/cmd/server/Dockerfile
+index 73be6e7679..f86e53af4c 100644
+--- a/cmd/server/Dockerfile
++++ b/cmd/server/Dockerfile
+@@ -82,26 +82,8 @@ RUN wget "https://dl.min.io/server/minio/release/linux-amd64/archive/minio.$MINI
+ COPY ctags-install-alpine.sh /ctags-install-alpine.sh
+ RUN /ctags-install-alpine.sh
+ 
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/prometheus:server /bin/prom-wrapper /bin
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/prometheus:server /bin/alertmanager /bin
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/prometheus:server /alertmanager.sh /alertmanager.sh
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/prometheus:server /bin/prometheus /bin
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/prometheus:server /prometheus.sh /prometheus.sh
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/prometheus:server /usr/share/prometheus /usr/share/prometheus
+-
+-RUN set -ex && \
+-    addgroup -S grafana && \
+-    adduser -S -G grafana grafana && \
+-    apk add --no-cache libc6-compat ca-certificates su-exec
+ 
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/grafana:server /usr/share/grafana /usr/share/grafana
++RUN set -ex && apk add --no-cache libc6-compat ca-certificates su-exec
+ 
+ COPY . /
+ 
+@@ -117,11 +99,7 @@ COPY --from=coursier /usr/local/bin/coursier /usr/local/bin/coursier
+ # hadolint ignore=DL4006
+ RUN wget -O - https://github.com/jtilander/p4d/raw/4600d741720f85d77852dcca7c182e96ad613358/lib/lib-x64.tgz | tar zx --directory /
+ 
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/grafana:server /sg_config_grafana/provisioning/dashboards /sg_config_grafana/provisioning/dashboards
+ 
+-# hadolint ignore=DL3022
+-COPY --from=sourcegraph/postgres_exporter:server /usr/local/bin/postgres_exporter /usr/local/bin/postgres_exporter
+ 
+ RUN echo "hosts: files dns" > /etc/nsswitch.conf
+ 
+diff --git a/cmd/server/build.sh b/cmd/server/build.sh
+index 62555925e4..18b5a188c1 100755
+--- a/cmd/server/build.sh
++++ b/cmd/server/build.sh
+@@ -84,20 +84,6 @@ else
+   pushd monitoring && go generate && popd
+ fi
+ 
+-echo "--- prometheus"
+-cp -r docker-images/prometheus/config "$OUTPUT/sg_config_prometheus"
+-mkdir "$OUTPUT/sg_prometheus_add_ons"
+-cp dev/prometheus/linux/prometheus_targets.yml "$OUTPUT/sg_prometheus_add_ons"
+-IMAGE=sourcegraph/prometheus:server CACHE=true docker-images/prometheus/build.sh
+-
+-echo "--- grafana"
+-cp -r docker-images/grafana/config "$OUTPUT/sg_config_grafana"
+-cp -r dev/grafana/linux "$OUTPUT/sg_config_grafana/provisioning/datasources"
+-IMAGE=sourcegraph/grafana:server CACHE=true docker-images/grafana/build.sh
+-
+-echo "--- postgres exporter"
+-IMAGE=sourcegraph/postgres_exporter:server CACHE=true docker-images/postgres_exporter/build.sh
+-
+ echo "--- docker build"
+ docker build -f cmd/server/Dockerfile -t "$IMAGE" "$OUTPUT" \
+   --progress=plain \
