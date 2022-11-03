@@ -1,0 +1,70 @@
+diff --git a/client/web/src/nav/GlobalNavbar.tsx b/client/web/src/nav/GlobalNavbar.tsx
+index f175e27982..aa6a845fbf 100644
+--- a/client/web/src/nav/GlobalNavbar.tsx
++++ b/client/web/src/nav/GlobalNavbar.tsx
+@@ -48,14 +48,14 @@ import styles from './GlobalNavbar.module.scss'
+ 
+ export interface GlobalNavbarProps
+     extends SettingsCascadeProps<Settings>,
+-        PlatformContextProps,
+-        ExtensionsControllerProps,
+-        TelemetryProps,
+-        ThemeProps,
+-        ThemePreferenceProps,
+-        SearchContextInputProps,
+-        CodeInsightsProps,
+-        BatchChangesProps {
++    PlatformContextProps,
++    ExtensionsControllerProps,
++    TelemetryProps,
++    ThemeProps,
++    ThemePreferenceProps,
++    SearchContextInputProps,
++    CodeInsightsProps,
++    BatchChangesProps {
+     history: H.History
+     location: H.Location
+     authenticatedUser: AuthenticatedUser | null
+@@ -160,8 +160,8 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Globa
+ 
+     const onNavbarQueryChange = useNavbarQueryState(state => state.setQueryState)
+     const showSearchContext = useExperimentalFeatures(features => features.showSearchContext)
+-    const enableCodeMonitoring = useExperimentalFeatures(features => features.codeMonitoring)
+-    const showSearchNotebook = useExperimentalFeatures(features => features.showSearchNotebook)
++    const enableCodeMonitoring = false //useExperimentalFeatures(features => features.codeMonitoring)
++    const showSearchNotebook = false //useExperimentalFeatures(features => features.showSearchNotebook)
+ 
+     useEffect(() => {
+         // On a non-search related page or non-repo page, we clear the query in
+@@ -183,7 +183,7 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Globa
+     const searchNavBarItems = useMemo(() => {
+         const items: (NavDropdownItem | false)[] = [
+             searchContextsEnabled &&
+-                !!showSearchContext && { path: EnterprisePageRoutes.Contexts, content: 'Contexts' },
++            !!showSearchContext && { path: EnterprisePageRoutes.Contexts, content: 'Contexts' },
+         ]
+         return items.filter<NavDropdownItem>((item): item is NavDropdownItem => !!item)
+     }, [searchContextsEnabled, showSearchContext])
+@@ -275,22 +275,6 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Globa
+                     )}
+                     {props.authenticatedUser?.siteAdmin && <AnalyticsNavItem />}
+                     {fuzzyFinderNavbar && FuzzyFinderNavItem(props.setFuzzyFinderIsVisible)}
+-                    {props.authenticatedUser && (
+-                        <NavAction>
+-                            <FeedbackPrompt onSubmit={handleSubmitFeedback} productResearchEnabled={true}>
+-                                <PopoverTrigger
+-                                    as={Button}
+-                                    aria-label="Feedback"
+-                                    variant="secondary"
+-                                    outline={true}
+-                                    size="sm"
+-                                    className={styles.feedbackTrigger}
+-                                >
+-                                    <span>Feedback</span>
+-                                </PopoverTrigger>
+-                            </FeedbackPrompt>
+-                        </NavAction>
+-                    )}
+                     {props.authenticatedUser && extensionsController !== null && enableLegacyExtensions && (
+                         <NavAction>
+                             <WebCommandListPopoverButton
