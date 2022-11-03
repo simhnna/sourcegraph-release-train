@@ -20,4 +20,4 @@ jobs:
           cd $GITHUB_WORKSPACE/sourcegraph
           git fetch origin refs/tags/v$tag:refs/tags/v$tag
           git checkout "tags/v$tag"
-          git apply ../patches/auth.patch
+          git apply ../patches/*

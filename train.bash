@@ -31,15 +31,15 @@ git checkout "tags/v$tag" -b "$tag-release-branch-simhnna"
 if [ 'Linux' == "$(uname -s)" ]; then
   sudo apt-get install musl-tools
 fi
-git apply ../patches/auth.patch
+git apply ../patches/*
 
 cd cmd/server
 ./pre-build.sh
 ./build.sh
 
-docker tag "${IMAGE}:latest" "${IMAGE}:${tag}"
+docker tag "${IMAGE}:latest" "${IMAGE}:${PUSH_VERSION:-$tag}"
 
-docker push "${IMAGE}:${tag}"
+docker push "${IMAGE}:${PUSH_VERSION:-$tag}"
 
 echo '===========
 =  Done!  =

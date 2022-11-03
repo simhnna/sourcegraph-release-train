@@ -22,16 +22,12 @@ jobs:
         with:
           repository: sourcegraph/sourcegraph
           path: sourcegraph
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '^v16.0.7'
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
           go-version: '^1.16.2'
-      # - name: Apply patches
-      #   run: |
-      #     cd $GITHUB_WORKSPACE/sourcegraph
-      #     git apply ../patches/auth.patch
       - name: trigger build script
         env:
           docker_username: ${{ secrets.DOCKER_USERNAME }}
