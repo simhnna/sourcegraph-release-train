@@ -270,21 +270,6 @@ index 6242dd83b3..eb29b66cf0 100644
                  }
              }
          }
-@@ -734,10 +734,10 @@ const symbolInfoFlexibleToCanonical = (flexible: SymbolInfoFlexible): SymbolInfo
-         range:
-             'line' in flexible.definition
-                 ? {
--                      line: flexible.definition.line,
--                      character: flexible.definition.character,
--                      length: flexible.definition.length,
--                  }
-+                    line: flexible.definition.line,
-+                    character: flexible.definition.character,
-+                    length: flexible.definition.length,
-+                }
-                 : flexible.definition.range,
-     },
-     hover: flexible.hover,
 diff --git a/client/web/src/codeintel/ReferencesPanelQueries.ts b/client/web/src/codeintel/ReferencesPanelQueries.ts
 index c93eee921a..99ecd0d25e 100644
 --- a/client/web/src/codeintel/ReferencesPanelQueries.ts
