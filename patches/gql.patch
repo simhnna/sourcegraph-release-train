@@ -257,8 +257,36 @@ index 39e30b083a..81ab8f5772 100644
                  }
              }
          }
+diff --git a/client/shared/src/codeintel/legacy-extensions/util/api.ts b/client/shared/src/codeintel/legacy-extensions/util/api.ts
+index 6242dd83b3..eb29b66cf0 100644
+--- a/client/shared/src/codeintel/legacy-extensions/util/api.ts
++++ b/client/shared/src/codeintel/legacy-extensions/util/api.ts
+@@ -701,7 +701,7 @@ const localCodeIntelQuery = gql`
+         repository(name: $repository) {
+             commit(rev: $commit) {
+                 blob(path: $path) {
+-                    localCodeIntel
++                    name
+                 }
+             }
+         }
+@@ -734,10 +734,10 @@ const symbolInfoFlexibleToCanonical = (flexible: SymbolInfoFlexible): SymbolInfo
+         range:
+             'line' in flexible.definition
+                 ? {
+-                      line: flexible.definition.line,
+-                      character: flexible.definition.character,
+-                      length: flexible.definition.length,
+-                  }
++                    line: flexible.definition.line,
++                    character: flexible.definition.character,
++                    length: flexible.definition.length,
++                }
+                 : flexible.definition.range,
+     },
+     hover: flexible.hover,
 diff --git a/client/web/src/codeintel/ReferencesPanelQueries.ts b/client/web/src/codeintel/ReferencesPanelQueries.ts
-index c93eee921a..c13d98dce2 100644
+index c93eee921a..99ecd0d25e 100644
 --- a/client/web/src/codeintel/ReferencesPanelQueries.ts
 +++ b/client/web/src/codeintel/ReferencesPanelQueries.ts
 @@ -44,52 +44,17 @@ const codeIntelFragments = gql`
@@ -377,6 +405,15 @@ index c93eee921a..c13d98dce2 100644
 -                            ...LocationConnectionFields
 -                        }
 -                    }
++                    name
+                 }
+             }
+         }
+@@ -252,7 +185,7 @@ export const LOCAL_CODE_INTEL_QUERY = gql`
+         repository(name: $repository) {
+             commit(rev: $commit) {
+                 blob(path: $path) {
+-                    localCodeIntel
 +                    name
                  }
              }

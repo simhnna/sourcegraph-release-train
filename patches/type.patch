@@ -1,0 +1,93 @@
+diff --git a/client/shared/src/codeintel/legacy-extensions/util/api.ts b/client/shared/src/codeintel/legacy-extensions/util/api.ts
+index 6242dd83b3..e2256a8163 100644
+--- a/client/shared/src/codeintel/legacy-extensions/util/api.ts
++++ b/client/shared/src/codeintel/legacy-extensions/util/api.ts
+@@ -129,10 +129,10 @@ export class API {
+         `
+ 
+         interface IntrospectionResponse {
+-            __type: { fields: { name: string }[] }
++            __type?: { fields: { name: string }[] }
+         }
+ 
+-        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type.fields.some(
++        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type?.fields.some(
+             field => field.name === 'isFork'
+         )
+     }
+@@ -154,10 +154,10 @@ export class API {
+         `
+ 
+         interface IntrospectionResponse {
+-            __type: { fields: { name: string }[] }
++            __type?: { fields: { name: string }[] }
+         }
+ 
+-        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type.fields.some(
++        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type?.fields.some(
+             field => field.name === 'implementations'
+         )
+     }
+@@ -180,10 +180,10 @@ export class API {
+         `
+ 
+         interface IntrospectionResponse {
+-            __type: { fields: { name: string }[] }
++            __type?: { fields: { name: string }[] }
+         }
+ 
+-        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type.fields.some(
++        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type?.fields.some(
+             field => field.name === 'localCodeIntel'
+         )
+     })
+@@ -205,10 +205,10 @@ export class API {
+         `
+ 
+         interface IntrospectionResponse {
+-            __type: { fields: { name: string }[] }
++            __type?: { fields: { name: string }[] }
+         }
+ 
+-        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type.fields.some(
++        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type?.fields.some(
+             field => field.name === 'symbolInfo'
+         )
+     })
+@@ -230,10 +230,10 @@ export class API {
+         `
+ 
+         interface IntrospectionResponse {
+-            __type: { fields: { name: string }[] }
++            __type?: { fields: { name: string }[] }
+         }
+ 
+-        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type.fields.some(
++        return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type?.fields.some(
+             field => field.name === 'range'
+         )
+     })
+@@ -561,7 +561,7 @@ export class API {
+         `
+ 
+         interface IntrospectionResponse {
+-            __type: { fields: { name: string }[] }
++            __type?: { fields: { name: string }[] }
+         }
+ 
+         return (await queryGraphQL<IntrospectionResponse>(introspectionQuery)).__type.fields.some(
+@@ -734,10 +734,10 @@ const symbolInfoFlexibleToCanonical = (flexible: SymbolInfoFlexible): SymbolInfo
+         range:
+             'line' in flexible.definition
+                 ? {
+-                      line: flexible.definition.line,
+-                      character: flexible.definition.character,
+-                      length: flexible.definition.length,
+-                  }
++                    line: flexible.definition.line,
++                    character: flexible.definition.character,
++                    length: flexible.definition.length,
++                }
+                 : flexible.definition.range,
+     },
+     hover: flexible.hover,
