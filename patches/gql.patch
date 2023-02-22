@@ -258,11 +258,11 @@ index 39e30b083a..81ab8f5772 100644
              }
          }
 diff --git a/client/shared/src/codeintel/legacy-extensions/util/api.ts b/client/shared/src/codeintel/legacy-extensions/util/api.ts
-index 6242dd83b3..eb29b66cf0 100644
+index e39e310b0b..efe254c4c4 100644
 --- a/client/shared/src/codeintel/legacy-extensions/util/api.ts
 +++ b/client/shared/src/codeintel/legacy-extensions/util/api.ts
-@@ -701,7 +701,7 @@ const localCodeIntelQuery = gql`
-         repository(name: $repository) {
+@@ -513,7 +513,7 @@ const localCodeIntelQuery = gql`
+             id
              commit(rev: $commit) {
                  blob(path: $path) {
 -                    localCodeIntel
@@ -271,7 +271,20 @@ index 6242dd83b3..eb29b66cf0 100644
              }
          }
 diff --git a/client/web/src/codeintel/ReferencesPanelQueries.ts b/client/web/src/codeintel/ReferencesPanelQueries.ts
-index c93eee921a..99ecd0d25e 100644
+index c974b9ff01..43b2cb4212 100644
+--- a/client/web/src/codeintel/ReferencesPanelQueries.ts
++++ b/client/web/src/codeintel/ReferencesPanelQueries.ts
+@@ -187,7 +187,7 @@ export const LOCAL_CODE_INTEL_QUERY = gql`
+             id
+             commit(rev: $commit) {
+                 blob(path: $path) {
+-                    localCodeIntel
++                    name
+                 }
+             }
+         }
+diff --git a/client/web/src/codeintel/ReferencesPanelQueries.ts b/client/web/src/codeintel/ReferencesPanelQueries.ts
+index 25651a8e83..c974b9ff01 100644
 --- a/client/web/src/codeintel/ReferencesPanelQueries.ts
 +++ b/client/web/src/codeintel/ReferencesPanelQueries.ts
 @@ -44,52 +44,17 @@ const codeIntelFragments = gql`
@@ -394,20 +407,11 @@ index c93eee921a..99ecd0d25e 100644
                  }
              }
          }
-@@ -252,7 +185,7 @@ export const LOCAL_CODE_INTEL_QUERY = gql`
-         repository(name: $repository) {
-             commit(rev: $commit) {
-                 blob(path: $path) {
--                    localCodeIntel
-+                    name
-                 }
-             }
-         }
 diff --git a/client/web/src/enterprise/codeintel/badge/hooks/queries.ts b/client/web/src/enterprise/codeintel/badge/hooks/queries.ts
-index 7f3f6ce2b2..59ac3a6659 100644
+index 5a0cc05cd0..59ac3a6659 100644
 --- a/client/web/src/enterprise/codeintel/badge/hooks/queries.ts
 +++ b/client/web/src/enterprise/codeintel/badge/hooks/queries.ts
-@@ -6,105 +6,15 @@ import { lsifUploadFieldsFragment } from '../../uploads/hooks/types'
+@@ -6,114 +6,15 @@ import { lsifUploadFieldsFragment } from '../../uploads/hooks/types'
  export const codeIntelStatusQuery = gql`
      query CodeIntelStatus($repository: String!, $commit: String!, $path: String!) {
          repository(name: $repository) {
@@ -419,6 +423,9 @@ index 7f3f6ce2b2..59ac3a6659 100644
 -                }
 -                recentIndexes {
 -                    ...LSIFIndexesWithRepositoryNamespaceFields
+-                }
+-                availableIndexers {
+-                    ...InferredAvailableIndexersFields
 -                }
 -            }
 +            
@@ -510,16 +517,22 @@ index 7f3f6ce2b2..59ac3a6659 100644
 -        }
 -    }
 -
+-    fragment InferredAvailableIndexersFields on InferredAvailableIndexers {
+-        roots
+-        index
+-        url
+-    }
+-
 -    ${lsifUploadFieldsFragment}
 -    ${lsifIndexFieldsFragment}
  `
  
  export const requestedLanguageSupportQuery = gql`
 diff --git a/client/web/src/repo/blob/backend.ts b/client/web/src/repo/blob/backend.ts
-index fa756b4349..b58182f80b 100644
+index b2d568775b..d67bdf0fe6 100644
 --- a/client/web/src/repo/blob/backend.ts
 +++ b/client/web/src/repo/blob/backend.ts
-@@ -144,11 +144,7 @@ export const fetchStencil = memoizeObservable((options: FetchStencilOptions): Ob
+@@ -154,11 +154,7 @@ export const fetchStencil = memoizeObservable((options: FetchStencilOptions): Ob
                  repository(name: $repoName) {
                      commit(rev: $revision) {
                          blob(path: $filePath) {
