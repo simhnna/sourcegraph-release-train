@@ -1,0 +1,26 @@
+diff --git a/client/web/src/search/results/sidebar/SearchFiltersSidebar.tsx b/client/web/src/search/results/sidebar/SearchFiltersSidebar.tsx
+index 8c8c7f83bb..08adc05091 100644
+--- a/client/web/src/search/results/sidebar/SearchFiltersSidebar.tsx
++++ b/client/web/src/search/results/sidebar/SearchFiltersSidebar.tsx
+@@ -127,6 +127,10 @@ export const SearchFiltersSidebar: FC<PropsWithChildren<SearchFiltersSidebarProp
+                 </SearchSidebarSection>
+             )}
+ 
++            <SearchSidebarSection sectionId={SectionID.SEARCH_SNIPPETS} header="Search snippets">
++                {getSearchSnippetLinks(settingsCascade, onSnippetClicked)}
++            </SearchSidebarSection>
++
+             <SearchSidebarSection sectionId={SectionID.SEARCH_TYPES} header="Search Types">
+                 {getSearchTypeLinks({
+                     query: liveQuery,
+@@ -183,9 +187,7 @@ export const SearchFiltersSidebar: FC<PropsWithChildren<SearchFiltersSidebarProp
+                 {getSearchReferenceFactory({ telemetryService, setQueryState: onNavbarQueryChange })}
+             </SearchSidebarSection>
+ 
+-            <SearchSidebarSection sectionId={SectionID.SEARCH_SNIPPETS} header="Search snippets">
+-                {getSearchSnippetLinks(settingsCascade, onSnippetClicked)}
+-            </SearchSidebarSection>
++
+         </SearchSidebar>
+     )
+ })
